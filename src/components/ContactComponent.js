@@ -1,5 +1,15 @@
 import React, { Component } from "react";
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col } from "reactstrap";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  Button,
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Col,
+  FormFeedback
+} from "reactstrap";
 import { Link } from "react-router-dom";
 
 class Contact extends Component {
@@ -12,10 +22,55 @@ class Contact extends Component {
       email: "",
       agree: false,
       contacttype: "Tel.",
-      message: ""
+      message: "",
+      touched: {
+        firstname: false,
+        lastname: false,
+        telnum: false,
+        email: false
+      }
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleBlur = this.handleBlur.bind(this);
+  }
+
+  handleBlur = field => e => {
+    this.setState({
+      touched: { ...this.state.touched, [field]: true }
+    });
+  };
+
+  validate(firstname, lastname, telnum, email) {
+    const errors = {
+      firstname: "",
+      lastname: "",
+      telnum: "",
+      email: ""
+    };
+
+    if (this.state.touched.firstname && firstname.length < 3) {
+      errors.firstname = "First name should be at least 3 characters";
+    } else if (firstname.length > 10) {
+      errors.firstname = "First name should be no more than 10 characters";
+    }
+
+    if (this.state.touched.lastname && lastname.length < 3) {
+      errors.lastname = "Last name should be at least 3 characters";
+    } else if (lastname.length > 10) {
+      errors.lastname = "Last name should be no more than 10 characters";
+    }
+
+    const reg = /^\d+$/;
+    if (this.state.touched.telnum && !reg.test(telnum)) {
+      errors.telnum = "Telephone number should only contain digits";
+    }
+
+    if (this.state.touched.email && email.split("").filter(x => x === "@").length !== 1) {
+      errors.email = "Email should contain @ symbol";
+    }
+
+    return errors;
   }
 
   handleInputChange = e => this.setState({ [e.target.name]: e.target.value });
@@ -27,6 +82,12 @@ class Contact extends Component {
   }
 
   render() {
+    const errors = this.validate(
+      this.state.firstname,
+      this.state.lastname,
+      this.state.telnum,
+      this.state.email
+    );
     return (
       <div className="container">
         <Breadcrumb>
@@ -97,9 +158,13 @@ class Contact extends Component {
                     id="firstname"
                     name="firstname"
                     placeholder="First name"
+                    valid={errors.firstname === ""}
+                    invalid={errors.firstname !== ""}
                     value={this.state.firstname}
+                    onBlur={this.handleBlur("firstname")}
                     onChange={this.handleInputChange}
                   />
+                  <FormFeedback>{errors.firstname}</FormFeedback>
                 </Col>
               </FormGroup>
               <FormGroup row>
@@ -112,9 +177,13 @@ class Contact extends Component {
                     id="lastname"
                     name="lastname"
                     placeholder="Last name"
+                    valid={errors.lastname === ""}
+                    invalid={errors.lastname !== ""}
                     value={this.state.lastname}
+                    onBlur={this.handleBlur("lastname")}
                     onChange={this.handleInputChange}
                   />
+                  <FormFeedback>{errors.lastname}</FormFeedback>
                 </Col>
               </FormGroup>
               <FormGroup row>
@@ -127,9 +196,13 @@ class Contact extends Component {
                     id="telnum"
                     name="telnum"
                     placeholder="Telephone Number"
+                    valid={errors.telnum === ""}
+                    invalid={errors.telnum !== ""}
                     value={this.state.telnum}
+                    onBlur={this.handleBlur("telnum")}
                     onChange={this.handleInputChange}
                   />
+                  <FormFeedback>{errors.telnum}</FormFeedback>
                 </Col>
               </FormGroup>
               <FormGroup row>
@@ -142,9 +215,13 @@ class Contact extends Component {
                     id="email"
                     name="email"
                     placeholder="Email address"
+                    valid={errors.email === ""}
+                    invalid={errors.email !== ""}
                     value={this.state.email}
+                    onBlur={this.handleBlur("email")}
                     onChange={this.handleInputChange}
                   />
+                  <FormFeedback>{errors.email}</FormFeedback>
                 </Col>
               </FormGroup>
               <FormGroup row>
