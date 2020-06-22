@@ -19,6 +19,7 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
+import Loading from "./LoadingComponent";
 
 const required = val => val && val.length;
 const maxLength = len => val => !val || val.length <= len;
@@ -171,29 +172,47 @@ function RenderComments({ comments, dishId, addComment }) {
 }
 
 const DishDetail = props => {
-  return (
-    <div className="container">
-      <Breadcrumb>
-        <BreadcrumbItem>
-          <Link to="/home" />
-          Home
-        </BreadcrumbItem>
-        <BreadcrumbItem>
-          <Link to="/menu" />
-          Menu
-        </BreadcrumbItem>
-        <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-      </Breadcrumb>
-      <div className="row">
-        <RenderDish dish={props.dish} />
-        <RenderComments
-          comments={props.comments}
-          addComment={props.addComment}
-          dishId={props.dish.id}
-        />
+  if (props.isLoading) {
+    return (
+      <div className="container">
+        <div className="row">
+          <Loading />
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else if (props.error) {
+    return (
+      <div className="container">
+        <div className="row">
+          <h4>{props.error}</h4>
+        </div>
+      </div>
+    );
+  } else if (props.dishes !== null) {
+    return (
+      <div className="container">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/home" />
+            Home
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/menu" />
+            Menu
+          </BreadcrumbItem>
+          <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+        </Breadcrumb>
+        <div className="row">
+          <RenderDish dish={props.dish} />
+          <RenderComments
+            comments={props.comments}
+            addComment={props.addComment}
+            dishId={props.dish.id}
+          />
+        </div>
+      </div>
+    );
+  }
 };
 
 export default DishDetail;
