@@ -3,7 +3,7 @@ import { Dishes } from "./dishes";
 import { Leaders } from "./leaders";
 import { Promotions } from "./promotions";
 import { Comments } from "./comments";
-import { combineReducers } from "react-redux";
+import { combineReducers } from "redux";
 
 export const ConfigureStore = () => {
   const store = createStore(
