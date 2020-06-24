@@ -1,16 +1,18 @@
-import React, { Component } from "react";
+import React from "react";
 import { Card, CardImg, CardText, CardBody, CardTitle, CardSubtitle } from "reactstrap";
 import Loading from "./LoadingComponent";
+import { baseUrl } from "../shared/baseUrl";
 
-function RenderCard({ item, isLoading, error }) {
+function RenderCard({ item, isLoading, errMess }) {
+  console.log(JSON.stringify(item));
   if (isLoading) {
     return <Loading />;
-  } else if (error) {
-    return <h4>{error}</h4>;
+  } else if (errMess) {
+    return <h4>{errMess}</h4>;
   } else
     return (
       <Card>
-        <CardImg src={item.image} alt={item.name} />
+        <CardImg src={baseUrl + item.image} alt={item.name} />
         <CardBody>
           <CardTitle>{item.name}</CardTitle>
           {item.designation ? <CardSubtitle>{item.designation}</CardSubtitle> : null}

@@ -9,7 +9,6 @@ import {
   Jumbotron,
   Modal,
   ModalBody,
-  ModalFooter,
   ModalHeader,
   Form,
   FormGroup,
