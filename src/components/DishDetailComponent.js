@@ -42,7 +42,7 @@ class CommentForm extends Component {
 
   handleSubmit(values) {
     console.log(this.props.dishId);
-    this.props.addComment(this.props.dishId, values.rating, values.name, values.comment);
+    this.props.postComment(this.props.dishId, values.rating, values.name, values.comment);
   }
 
   render() {
@@ -144,7 +144,7 @@ function RenderDish({ dish }) {
   );
 }
 
-function RenderComments({ comments, dishId, addComment }) {
+function RenderComments({ comments, dishId, postComment }) {
   const commentsList = comments.map(comment => {
     return (
       <li className="mt-3">
@@ -165,7 +165,7 @@ function RenderComments({ comments, dishId, addComment }) {
     <div className="col-6">
       <h4>Comments</h4>
       <ul className="list-unstyled">{commentsList}</ul>
-      <CommentForm dishId={dishId} addComment={addComment} />
+      <CommentForm dishId={dishId} postComment={postComment} />
     </div>
   );
 }
@@ -205,7 +205,7 @@ const DishDetail = props => {
           <RenderDish dish={props.dish} />
           <RenderComments
             comments={props.comments}
-            addComment={props.addComment}
+            postComment={props.postComment}
             dishId={props.dish.id}
           />
         </div>
