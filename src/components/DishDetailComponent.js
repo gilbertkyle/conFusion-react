@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import { Control, LocalForm, Errors } from "react-redux-form";
 import Loading from "./LoadingComponent";
 import { baseUrl } from "../shared/baseUrl";
+import { FadeTransform, Fade, Stagger } from "react-animation-components";
 
 const required = val => val && val.length;
 const maxLength = len => val => !val || val.length <= len;
@@ -133,13 +134,15 @@ class CommentForm extends Component {
 function RenderDish({ dish }) {
   return (
     <div className="col-6">
-      <Card>
-        <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
-        <CardBody>
-          <CardTitle>{dish.name}</CardTitle>
-          <CardText>{dish.description}</CardText>
-        </CardBody>
-      </Card>
+      <FadeTransform in transformProps={{ exitTransform: "scale(0.5) translateY(-50%)" }}>
+        <Card>
+          <CardImg width="100%" src={baseUrl + dish.image} alt={dish.name} />
+          <CardBody>
+            <CardTitle>{dish.name}</CardTitle>
+            <CardText>{dish.description}</CardText>
+          </CardBody>
+        </Card>
+      </FadeTransform>
     </div>
   );
 }
@@ -147,24 +150,28 @@ function RenderDish({ dish }) {
 function RenderComments({ comments, dishId, postComment }) {
   const commentsList = comments.map(comment => {
     return (
-      <li className="mt-3">
-        {comment.comment}
-        <br />
-        {" -- "}
-        {comment.author}{" "}
-        {new Intl.DateTimeFormat("en-US", {
-          year: "numeric",
-          month: "short",
-          day: "2-digit"
-        }).format(new Date(Date.parse(comment.date)))}
-      </li>
+      <Fade in>
+        <li className="mt-3">
+          {comment.comment}
+          <br />
+          {" -- "}
+          {comment.author}{" "}
+          {new Intl.DateTimeFormat("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit"
+          }).format(new Date(Date.parse(comment.date)))}
+        </li>
+      </Fade>
     );
   });
 
   return (
     <div className="col-6">
       <h4>Comments</h4>
-      <ul className="list-unstyled">{commentsList}</ul>
+      <ul className="list-unstyled">
+        <Stagger in>{commentsList}</Stagger>
+      </ul>
       <CommentForm dishId={dishId} postComment={postComment} />
     </div>
   );
